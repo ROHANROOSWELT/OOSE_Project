@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LICET — Exam Registration Portal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- AUTH PAGES -->
+<div id="authPage" class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-logo">LICET</div>
+      <h2>Loyola-ICAM College of Engineering and Technology</h2>
+      <p>Examination Registration Portal</p>
+      <div class="auth-tagline">April / May 2026 Examinations</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <!-- LOGIN -->
+    <div id="loginBox" class="auth-box">
+      <h3>Student Login</h3>
+      <p class="auth-sub">Enter your credentials to continue</p>
+      <div class="form-group">
+        <label>Register Number</label>
+        <input type="text" id="loginReg" placeholder="e.g. 2021CS001">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter') login()">
+      </div>
+      <div class="error-msg" id="loginErr"></div>
+      <button class="btn-primary full" onclick="login()">Login</button>
+      <p class="switch-link">New student? <span onclick="showSignup()">Create Account</span></p>
+      <p class="admin-link"><a href="/admin.html">Admin Portal →</a></p>
+    </div>
+
+    <!-- SIGNUP -->
+    <div id="signupBox" class="auth-box hidden">
+      <h3>Create Account</h3>
+      <p class="auth-sub">Register to access the exam portal</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Register Number *</label>
+          <input type="text" id="regNo" placeholder="2021CS001">
+        </div>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="regName" placeholder="Your full name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Department *</label>
+          <select id="regDept">
+            <option value="">Select</option>
+            <option>CSE</option><option>IT</option><option>ECE</option>
+            <option>EEE</option><option>MECH</option><option>CIVIL</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Degree *</label>
+          <select id="regDegree">
+            <option value="">Select</option>
+            <option>BE</option><option>BTech</option><option>ME</option><option>MTech</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Semester *</label>
+          <select id="regSem">
+            <option value="">Select</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year *</label>
+          <select id="regYear">
+            <option value="">Select</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="regPhone" placeholder="10-digit number">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" id="regPass" placeholder="Set a password">
+      </div>
+      <div class="error-msg" id="signupErr"></div>
+      <div class="success-msg" id="signupOk"></div>
+      <button class="btn-primary full" onclick="signup()">Create Account</button>
+      <p class="switch-link">Already registered? <span onclick="showLogin()">Login here</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN PORTAL -->
+<div id="portal" class="hidden">
+
+  <!-- TOP NAV — longer, dark navy -->
+  <nav class="topnav">
+    <div class="nav-brand">
+      <span class="nav-logo">LICET</span>
+      <div class="nav-divider"></div>
+      <div>
+        <div class="nav-title">Loyola-ICAM College of Engineering and Technology</div>
+        <div class="nav-subtitle">Examination Registration Portal — April / May 2026</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-session">Apr/May 2026</span>
+      <div class="nav-profile" onclick="showSection('profile')">
+        <img id="navPhoto" src="" class="nav-avatar hidden">
+        <div id="navIcon" class="nav-icon">&#9786;</div>
+        <span id="navName"></span>
+      </div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="portal-body">
+
+    <!-- SIDEBAR — dark navy -->
+    <aside class="sidebar">
+      <div class="sidebar-student">
+        <div class="sidebar-photo-wrap" onclick="showSection('profile')">
+          <img id="sidePhoto" src="" class="side-avatar hidden">
+          <div id="sideIcon" class="side-icon">&#9786;</div>
+        </div>
+        <div class="sidebar-info">
+          <div id="sidebarName" class="sidebar-name"></div>
+          <div id="sidebarReg" class="sidebar-reg"></div>
+          <div id="sidebarDept" class="sidebar-dept"></div>
+        </div>
+      </div>
+
+      <!-- PROGRESS IN SIDEBAR (small) -->
+      <div class="progress-section">
+        <div class="progress-label">Progress</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="sideProgressBar" style="width:0%"></div>
+        </div>
+        <div class="progress-steps">
+          <span id="ps1" class="pstep">Eligible</span>
+          <span id="ps2" class="pstep">Courses</span>
+          <span id="ps3" class="pstep">Paid</span>
+          <span id="ps4" class="pstep">Hall Ticket</span>
+        </div>
+      </div>
+
+      <nav class="sidenav">
+        <a class="snav-item active" id="snav-dashboard"   onclick="showSection('dashboard')">  <span class="snav-icon">&#9632;</span> Dashboard</a>
+        <a class="snav-item"        id="snav-eligibility" onclick="showSection('eligibility')"><span class="snav-icon">&#9632;</span> Check Eligibility</a>
+        <a class="snav-item"        id="snav-register"    onclick="showSection('register')">   <span class="snav-icon">&#9632;</span> Exam Registration</a>
+        <a class="snav-item"        id="snav-payment"     onclick="showSection('payment')">    <span class="snav-icon">&#9632;</span> Fee Payment</a>
+        <a class="snav-item"        id="snav-hallticket"  onclick="showSection('hallticket')"> <span class="snav-icon">&#9632;</span> Hall Ticket</a>
+        <a class="snav-item"        id="snav-profile"     onclick="showSection('profile')">    <span class="snav-icon">&#9632;</span> My Profile</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- DASHBOARD -->
+      <section id="sec-dashboard" class="section">
+        <div class="page-header">
+          <div>
+            <h2 id="dashGreet">Welcome!</h2>
+            <p class="page-sub">April / May 2026 Examination Registration</p>
+          </div>
+        </div>
+
+        <!-- STATUS CARDS -->
+        <div class="status-cards" id="statusCards"></div>
+
+        <!-- IMPORTANT DATES -->
+        <div class="info-banner">
+          <div class="banner-title">Important Dates</div>
+          <div class="banner-dates">
+            <div class="bdate"><span>Registration Open</span><strong>01 Apr 2026</strong></div>
+            <div class="bdate"><span>Last Date</span><strong>15 Apr 2026</strong></div>
+            <div class="bdate"><span>Exam Starts</span><strong>02 May 2026</strong></div>
+            <div class="bdate"><span>Exam Ends</span><strong>20 May 2026</strong></div>
+          </div>
+        </div>
+
+        <!-- PROGRESS BAR — graduation cap themed -->
+        <div class="dash-progress-section">
+          <div class="dash-progress-title">Registration Progress</div>
+          <div class="progress-track-wrap">
+            <div class="progress-track-line">
+              <div class="progress-track-fill" id="dashProgressFill" style="width:0%"></div>
+            </div>
+            <div class="progress-steps-row">
+              <div class="progress-step-node">
+                <div class="step-circle" id="dps1">1</div>
+                <div class="step-label" id="dpl1">Eligibility</div>
+              </div>
+              <div class="progress-step-node">
+                <div class="step-circle" id="dps2">2</div>
+                <div class="step-label" id="dpl2">Registration</div>
+              </div>
+              <div class="progress-step-node">
+                <div class="step-circle" id="dps3">3</div>
+                <div class="step-label" id="dpl3">Payment</div>
+              </div>
+              <div class="progress-step-node">
+                <div class="step-circle" id="dps4">4</div>
+                <div class="step-label" id="dpl4">Hall Ticket</div>
+              </div>
+            </div>
+            <!-- Graduation cap that moves along the track -->
+            <div class="grad-cap-icon" id="gradCapIcon" style="left:0%">🎓</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ELIGIBILITY -->
+      <section id="sec-eligibility" class="section hidden">
+        <div class="page-header"><div><h2>Eligibility Status</h2><p class="page-sub">Your exam registration eligibility</p></div></div>
+        <div id="eligibilityContent"><div class="loading-box">Loading...</div></div>
+      </section>
+
+      <!-- REGISTRATION -->
+      <section id="sec-register" class="section hidden">
+        <div class="page-header"><div><h2>Exam Registration</h2><p class="page-sub">Select courses for April/May 2026</p></div></div>
+        <div id="registerContent"><div class="loading-box">Loading...</div></div>
+      </section>
+
+      <!-- PAYMENT -->
+      <section id="sec-payment" class="section hidden">
+        <div class="page-header"><div><h2>Fee Payment</h2><p class="page-sub">Pay your examination fee securely</p></div></div>
+        <div id="paymentContent"><div class="loading-box">Loading...</div></div>
+      </section>
+
+      <!-- HALL TICKET -->
+      <section id="sec-hallticket" class="section hidden">
+        <div class="page-header"><div><h2>Hall Ticket</h2><p class="page-sub">April / May 2026 Examinations</p></div></div>
+        <div id="hallticketContent"><div class="loading-box">Loading...</div></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="sec-profile" class="section hidden">
+        <div class="page-header"><div><h2>My Profile</h2><p class="page-sub">Manage your personal information</p></div></div>
+        <div id="profileContent"><div class="loading-box">Loading...</div></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

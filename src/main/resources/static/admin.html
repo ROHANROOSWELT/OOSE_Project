@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LICET Admin Portal</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="adminLogin" class="admin-login-page">
+  <div class="admin-login-card">
+    <div class="admin-login-logo">LICET</div>
+    <h2>Admin Portal</h2>
+    <p>Examination Control Office</p>
+    <div class="form-group mt2">
+      <label>Username</label>
+      <input type="text" id="adminUser" placeholder="admin">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') adminLogin()">
+    </div>
+    <div class="error-msg" id="loginErr"></div>
+    <button class="btn-primary full" onclick="adminLogin()">Login</button>
+    <p class="back-link"><a href="/">← Student Portal</a></p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="adminDashboard" class="hidden">
+  <nav class="admin-nav">
+    <div class="nav-brand">
+      <span class="nav-logo">LICET</span>
+      <div class="nav-divider"></div>
+      <div>
+        <div class="nav-title">Loyola-ICAM College of Engineering and Technology</div>
+        <div class="nav-subtitle-admin">Examination Control Office — April / May 2026</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-session">Apr/May 2026</span>
+      <span id="adminWelcome" class="admin-welcome"></span>
+      <button class="btn-logout" onclick="adminLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <aside class="admin-sidebar">
+      <nav>
+        <a class="snav active" id="snav-overview"       onclick="showTab('overview')">&#9632; Overview</a>
+        <a class="snav"        id="snav-students"       onclick="showTab('students')">&#9632; Students & Arrears</a>
+        <a class="snav"        id="snav-registrations"  onclick="showTab('registrations')">&#9632; Registrations</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- OVERVIEW -->
+      <div id="tab-overview" class="tab">
+        <div class="page-header">
+          <h2>Dashboard Overview</h2>
+          <button class="btn-secondary" onclick="refreshAll()">&#8635; Refresh</button>
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="card mt2">
+          <div class="card-title">Eligibility Rules</div>
+          <table class="data-table">
+            <thead><tr><th>Arrear Count</th><th>Max Courses</th><th>Eligibility</th></tr></thead>
+            <tbody>
+              <tr><td>0 arrears</td><td>9 courses</td><td><span class="badge badge-success">ELIGIBLE</span></td></tr>
+              <tr><td>1–2 arrears</td><td>7 courses</td><td><span class="badge badge-success">ELIGIBLE</span></td></tr>
+              <tr><td>3–4 arrears</td><td>5 courses</td><td><span class="badge badge-success">ELIGIBLE</span></td></tr>
+              <tr><td>5–6 arrears</td><td>3 courses</td><td><span class="badge badge-success">ELIGIBLE</span></td></tr>
+              <tr><td>7+ arrears</td><td>0 courses</td><td><span class="badge badge-danger">NOT ELIGIBLE</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div id="tab-students" class="tab hidden">
+        <div class="page-header">
+          <div><h2>Students & Arrear Management</h2><p class="page-sub">Set arrear subjects for each student</p></div>
+          <button class="btn-secondary" onclick="loadStudents()">&#8635; Refresh</button>
+        </div>
+        <div id="studentsContent"></div>
+      </div>
+
+      <!-- REGISTRATIONS -->
+      <div id="tab-registrations" class="tab hidden">
+        <div class="page-header">
+          <div><h2>Exam Registrations</h2><p class="page-sub">All student registrations for Apr/May 2026</p></div>
+          <button class="btn-secondary" onclick="loadStudents()">&#8635; Refresh</button>
+        </div>
+        <div id="registrationsContent"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ARREAR MODAL — new add-row design -->
+<div id="arrearModal" class="modal-overlay hidden" onclick="closeArrearModal(event)">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">Edit Arrears</h3>
+        <p id="modalSubtitle" style="font-size:.88rem;color:#64748b;margin-top:2px"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+
+    <!-- Arrear rows list -->
+    <div id="arrearRowsList" style="margin-bottom:1rem;max-height:280px;overflow-y:auto"></div>
+
+    <!-- Add arrear button -->
+    <button class="btn-add-arrear" onclick="addArrearRow()">
+      + Add Arrear Subject
+    </button>
+
+    <!-- Auto count display -->
+    <div class="arrear-count-display" id="arrearCountDisplay">
+      Arrear Count: <strong id="arrearCountNum">0</strong> &nbsp;|&nbsp;
+      Max Courses Allowed: <strong id="arrearMaxNum">9</strong> &nbsp;|&nbsp;
+      Status: <strong id="arrearStatusText" style="color:#16a34a">ELIGIBLE</strong>
+    </div>
+
+    <div class="error-msg" id="modalErr"></div>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.2rem">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveArrear()">Save Arrears</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="admin.js"></script>
+</body>
+</html>
